@@ -1,0 +1,233 @@
+<html>
+
+<head>
+    <title>Load Test</title>
+    <style>
+        body {
+            background: #272525;
+            font: normal 15px Arial, sans-serif;
+            color: #fff;
+        }
+
+        .details {
+            display: none;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        a:visited,
+        a:link {
+            color: #DADCE7;
+        }
+
+        a:hover {}
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        caption {
+            padding: 15px;
+        }
+
+        th {
+            padding: 22px;
+            font-size: 18px;
+            background: #434343;
+        }
+
+        tr.percentiles th {
+            padding-top: 0px;
+        }
+
+        tr:hover {
+            background: #303030;
+        }
+
+        td {
+            border-collapse: collapse;
+            text-align: center;
+            vertical-align: middle;
+            padding: 15px;
+            border-bottom: #4d4c49 1px solid;
+        }
+
+        .metric__good {
+            color: #77bd73;
+        }
+
+        .metric__fair {
+            color: #ffe23a;
+        }
+
+        .metric__poor {
+            color: #fd4b40;
+        }
+
+        .url {
+
+            text-align: left;
+        }
+
+        .metric {
+
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .console-errors .metric {
+            font-weight: normal;
+            font-size: 16px;
+        }
+
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltip-text {
+            display: none;
+            width: 110px;
+            right: -53px;
+            background-color: hsla(0, 0%, 0%, 0.8);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            border-radius: 4px;
+            font-size: 16px;
+            position: absolute;
+            z-index: 1;
+        }
+
+        .tooltip-text span {
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .tooltip .tooltip-text.errors {
+            width: 900px;
+            text-align: left;
+            word-wrap: break-word;
+            padding: 5px 20px;
+            right: 0px;
+        }
+
+        .tooltip:hover .tooltip-text {
+            display: block;
+        }
+
+        ul {
+            margin: 0 0 10px 0;
+            padding: 0;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        p {
+            margin-bottom: 0;
+        }
+
+        .config {
+            margin-top: 40px;
+        }
+
+        .config li {
+            margin-top: 5px;
+        }
+
+        .config ul {
+            margin: 10px 0px 30px 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <table>
+        <caption>
+            Load test based on <a href="https://www.npmjs.com/package/loadtest" target="balnk">"loadtest"</a> node.js library.
+        </caption>
+        <tr>
+            <th>URL</th>
+            <th>Total errors</th>
+            <th>Mean latency [ms]</th>
+            <th colspan="4">Latency percentiles [ms]</th>
+            <th>Test start timestamp</th>
+        </tr>
+        <tr class="percentiles">
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>50</th>
+            <th>90</th>
+            <th>95</th>
+            <th>99</th>
+            <th></th>
+        </tr>
+        {{#each results}}
+        <tr>
+            <td class="url"><a target="_blank" href="{{url}}">{{url}}</a></td>
+            <td>
+                {{#unless errorCodes }}
+                <div class="tooltip"><span class="metric metric__good">{{totalErrors}}</span> {{/unless}} {{#if errorCodes }}
+                    <div class="tooltip"><span class="metric metric__poor">{{totalErrors}}</span>
+                        <div class="tooltip-text">
+                            <span>Error codes:</span> {{#each errorCodes}}
+                            <p>{{#each this}} {{this}} {{/each}}
+                            </p>
+                            {{/each}}
+                        </div>
+                        {{/if}}
+                    </div>
+
+            </td>
+            <td>
+                <span class="metric metric__{{meanLatencyMs.mark}}">{{meanLatencyMs.value}}</span>
+            </td>
+
+            <td>
+                <span class="metric metric__{{percentiles50.mark}}">{{percentiles50.value}}</span>
+            </td>
+            <td>
+                <span class="metric metric__{{percentiles90.mark}}">{{percentiles90.value}}</span>
+            </td>
+            <td>
+                <span class="metric metric__{{percentiles95.mark}}">{{percentiles95.value}}</span>
+            </td>
+            <td>
+                <span class="metric metric__{{percentiles99.mark}}">{{percentiles99.value}}</span>
+            </td>
+            <td>
+                {{testStart}}
+            </td>
+        </tr>
+        {{/each}}
+    </table>
+
+    <div class="config">
+        Config:
+        <ul>
+            <li>Site hostname: {{config.siteHostName}}</li>
+            <li>Traffic manager hostname: {{config.trafficManagerHostName}}</li>
+            <li>Requests per second: {{config.requestsPerSecond}}</li>
+            <li>Test duration [s]: {{config.testDuration}}</li>
+            <li>Concurrency: {{config.concurrency}}</li>
+        </ul>
+        Tresholds:
+        <ul>
+            <li>Mean latency: <span class="metric__good">good</span> | {{config.tresholds.meanLatencyMs.[0]}} | <span class="metric__fair">fair</span>                | {{config.tresholds.meanLatencyMs.[1]}} | <span class="metric__poor">poor</span></li>
+            <li>50 percentile: <span class="metric__good">good</span> | {{config.tresholds.percentiles50.[0]}} | <span class="metric__fair">fair</span>                | {{config.tresholds.percentiles50.[1]}} | <span class="metric__poor">poor</span></li>
+            <li>90 percentile: <span class="metric__good">good</span> | {{config.tresholds.percentiles90.[0]}} | <span class="metric__fair">fair</span>                | {{config.tresholds.percentiles90.[1]}} | <span class="metric__poor">poor</span></li>
+            <li>95 percentile: <span class="metric__good">good</span> | {{config.tresholds.percentiles95.[0]}} | <span class="metric__fair">fair</span>                | {{config.tresholds.percentiles95.[1]}} | <span class="metric__poor">poor</span></li>
+            <li>99 percentile: <span class="metric__good">good</span> | {{config.tresholds.percentiles99.[0]}} | <span class="metric__fair">fair</span>                | {{config.tresholds.percentiles99.[1]}} | <span class="metric__poor">poor</span></li>
+        </ul>
+    </div>
+</body>
+
+</html>
