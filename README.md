@@ -28,3 +28,6 @@ TODO: Explain how other users and developers can contribute to make your code be
 
 
 docker pull mcr.microsoft.com/dotnet/framework/aspnet:4.8-windowsservercore-1909
+
+
+https://westeurope.data.mcr.microsoft.com/42012bb2682a4d76ba7fa17a9d9a9162-qb2vm9uiex//docker/registry/v2/blobs/sha256/6a/6ad8c00dfacf748f9876274c707409e6dd36bc50f6503223a5ece03932eec9ab/data
