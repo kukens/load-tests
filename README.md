@@ -27,11 +27,4 @@ Once the test is done a HTML report will be available in build artifacts to down
 TODO: Explain how other users and developers can contribute to make your code better. 
 
 
-Sitecore.PowerShell.Extensions-6.0.scwdp
-Sitecore JavaScript Services Server for Sitecore 9.3 XP 13.0.0 rev. 190924.scwdp
-Sitecore JavaScript Services Server for Sitecore 9.3 XP 13.0.0 rev. 190924 CD.scwdp
-Sitecore JavaScript Services Server for Sitecore 9.3 XM 13.0.0 rev. 190924.scwdp
-Sitecore JavaScript Services Server for Sitecore 9.3 XM 13.0.0 rev. 190924 CD.scwdp
-Sitecore Horizon 9.3.0 for Azure
-Sitecore Experience Accelerator XM 9.3.0.2589 CD.scwdp
-Sitecore Experience Accelerator XM 9.3.0.2589.scwdp
+docker pull mcr.microsoft.com/dotnet/framework/aspnet:4.8-windowsservercore-1909
